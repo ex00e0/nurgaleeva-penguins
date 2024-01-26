@@ -66,8 +66,8 @@
     <textarea id="newText" name="newText"></textarea>
     <label for="newCategory" id="labelCategory">Категория</label>
     <select id="newCategory" name="newCategory">
-       <option>категория 1</option>
-       <option>категория 2</option>
+       <option>1</option>
+       <option>2</option>
     </select>
     <input type="submit" value="Добавить новость" id="buttonForm">
   </form>
