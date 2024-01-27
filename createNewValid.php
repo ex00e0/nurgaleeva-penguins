@@ -2,15 +2,19 @@
 include "connect.php"; 
 ?>
 <?php
-$newHeadline = $_POST["newHeadline"];
-$newText = $_POST["newText"];
-$newImage = $_FILES["newImage"];
-$newCategory = $_POST["newCategory"];
-function check ($con, $newImage, $newHeadline, $newText, $newCategory) {$result=0;
-    if ($newHeadline == "" || $newText == "" || $newImage['size'] == 0 || $newCategory == "") {echo '<script> alert("Не все поля заполнены"); </script>';}
-    else if (mb_strlen($newHeadline)>20) {echo '<script> alert("Слишком длинное название"); </script>';}
+$newHeadline = isset($_POST["newHeadline"])?($_POST["newHeadline"]):false;
+$newText = isset($_POST["newText"])?($_POST["newText"]):false;
+$newImage = isset($_FILES["newImage"]["tmp_name"])?($_FILES["newImage"]):false;
+$newCategory = isset($_POST["newCategory"])?($_POST["newCategory"]):false;
 
- else if (gettype($newHeadline) != "string") {echo '<script> alert("Ошибка в типах данных текста заголовка"); </script>';} 
+function check_error ($error) {return "<script> alert('$error'); 
+    location.href='createNew.php'; </script>";}
+
+function check ($con, $newImage, $newHeadline, $newText, $newCategory) {$result=0;
+    if ($newHeadline == false || $newText == false || $newImage['size'] == 0 || $newCategory == false) {echo check_error('Все поля должны быть заполнены!'); }
+    else if (mb_strlen($newHeadline)>20) {echo check_error('Название не должно превышать 20 символов!');}
+
+ else if (gettype($newHeadline) != "string") {echo check_error('Ошибка в заголовке новости');} 
 
 else if (gettype($newText) != "string") {echo '<script> alert("Ошибка в типах данных текста новости"); </script>';} 
 

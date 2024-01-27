@@ -1,3 +1,9 @@
+<?php
+include "connect.php";
+$queryCategory = "SELECT * FROM categories";
+$categories = mysqli_fetch_all(mysqli_query($con, $queryCategory));
+
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -36,7 +42,7 @@
   </div>
   <div id="thirdLine">
     <div id="catBlock">
-       <div>НОВОСТИ</div>
+       <!-- <div>НОВОСТИ</div>
        <div>МНЕНИЯ</div>
        <div>НАУКА</div>
        <div>ЖИЗНЬ</div>
@@ -46,7 +52,8 @@
        <div>СПОРТ</div>
        <div>ЛЮДИ</div>
        <div>ЗДОРОВЬЕ</div>
-       <div>ОБРАЗОВАНИЕ</div>
+       <div>ОБРАЗОВАНИЕ</div> -->
+       <?php foreach ($categories as $category) {echo"<div><a href=''>$category[1]</a></div>";} ?>
     </div>
   </div>
 </header>
@@ -66,8 +73,9 @@
     <textarea id="newText" name="newText"></textarea>
     <label for="newCategory" id="labelCategory">Категория</label>
     <select id="newCategory" name="newCategory">
-       <option>1</option>
-       <option>2</option>
+      <?php 
+      foreach ($categories as $cat) {$id_cat = $cat[0];   $name = $cat[1];
+        echo "<option value='$id_cat'>$name</option>";} ?>
     </select>
     <input type="submit" value="Добавить новость" id="buttonForm">
   </form>
