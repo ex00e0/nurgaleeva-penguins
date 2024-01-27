@@ -21,7 +21,10 @@ else if (gettype($newText) != "string") {echo '<script> alert("Ошибка в �
 else if (substr($newImage["type"], 0, 5) != "image") {echo '<script> alert("Пришла не картинка"); </script>';} 
 
 else {$insert = "INSERT INTO news (image, title, content, category_id) VALUES ('$newImage[name]', '$newHeadline', '$newText','$newCategory')";
-    $result = mysqli_query($con, $insert);}  
+    $result = mysqli_query($con, $insert);
+    if ($result) {move_uploaded_file($newImage["name"], "images/news/$newImage[name]");
+        check_error("Новость успешно создана");}
+    else check_error("Произошла ошибка:". mysqli_error($con)); }  
 return $result;   }
 if (check($con, $newImage, $newHeadline, $newText, $newCategory)) {echo "Отправлено в БД";}
 else {echo "Не отправлено в БД. Перепроверьте введенные данные.";}
