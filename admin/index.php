@@ -74,26 +74,32 @@ if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM n
             foreach ($news as $new) {echo "<li><a href='?new=". $new[0] ."'>".$new[1]."</a></li>";}
             ?>
         </ul>
+        <a href="/admin" id="plusA"><img src="../images/free-icon-plus-3303893.png" id="plus"></a>
     </section>
     <section class="col_2">
     <h2 id="h2"><?=$id_new?"Редактирование новости №$id_new":"Создание новости";?></h2>
     <div id="formGrid">
-  <form method="post" action="<?=$id_new?"/update":"/create";?>NewValid.php" enctype="multipart/form-data">
+  <form method="post" action="<?=$id_new?"update":"/create";?>NewValid.php" enctype="multipart/form-data">
     <label for="newHeadline">Заголовок новости</label>
-    <input type="text" id="newHeadline" name="newHeadline">
+    <input type="text" id="newHeadline" name="newHeadline" value='<?=$id_new?$new_info["title"]:"";?>'>
     <label for="newImage" id="labelImage">Изображение</label>
     <input type="file" id="newImage" name="newImage">
+  
     <label for="newText" id="labelText">Текст новости</label>
-    <textarea id="newText" name="newText"></textarea>
+    <textarea id="newText" name="newText"><?=$id_new?$new_info["content"]:"";?></textarea>
     <label for="newCategory" id="labelCategory">Категория</label>
     <select id="newCategory" name="newCategory">
       <?php 
       foreach ($categories as $cat) {$id_cat = $cat[0];   $name = $cat[1];
-        echo "<option value='$id_cat'>$name</option>";} ?>
+        if ($new_info["category_id"]==$id_cat) { echo "<option value='$id_cat' selected>$name</option>";}
+        else {echo "<option value='$id_cat'>$name</option>";}
+        } ?>
     </select>
-    <input type="submit" value="Добавить" id="buttonForm">
+    <?=$id_new? "<input type='hidden' name='id' value='$id_new'>":"";?>
+    <input type="submit" value="<?=$id_new?"Изменить":"Добавить";?>" id="buttonForm">
   </form>
 </div>
+<?=$id_new? "<img src='../images/news/".$new_info['image']."' alt='такого изображения нет' id='preview'>":"";?>
     </section>
 </div>
 
