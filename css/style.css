@@ -149,3 +149,26 @@
        margin: 0 auto;}
 .d-flex {display:flex;}
 .justify-content-center {justify-content: center;}
+
+.admin_content >* {width:50%;}
+#h1 {font-size:3vw;
+    font-family: "Lato";
+     color:#262D33;
+     margin-left:70px;
+     margin-bottom: 10px;}
+#h2 {font-size:1.7vw;
+       font-family: "Lato";
+       color:#262D33;
+       margin-left:70px;
+       margin-bottom: 15px;}
+.col_1 a {font-size:1vw;
+       font-family: "Lato";
+       color:#262D33;
+       margin-bottom: 5px;
+       margin-left:70px;
+       text-decoration: none;}
+.col_1 a {margin-bottom: 15px;
+           width:70%;
+           border-bottom: 1px solid #4B5157;}
+
+       

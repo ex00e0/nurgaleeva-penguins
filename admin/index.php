@@ -1,18 +1,21 @@
+
+<?php include ( "D:\OSPanel\domains\Nurgaleeva-penguins\date.php"); ?>
 <?php 
-include "connect.php";                 //выражение include включает и выполняет указанный файл
+include "D:\OSPanel\domains\Nurgaleeva-penguins\connect.php"; 
+$news = mysqli_fetch_all(mysqli_query($con, "select news_id, title from news"));
 $query_get_category = "SELECT * FROM categories ";
-$categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));       //получаем результат запроса из переменной query_get_category
-//и преобразуем его в двумерный массив, где каждый элемент - это массив с построчным получением кортежей из таблицы результата запроса
-$news = mysqli_query($con, "select * from news");
+$categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));
+
+$id_new = isset($_GET["new"])?$_GET["new"]:false;
+if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM news WHERE news_id=$id_new")); }
 ?>
-<?php include ( "date.php"); ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<link href="css/style.css" rel="stylesheet">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>index</title>
+   <link href="\css\style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin</title>
 </head>
 <body>
 
@@ -45,7 +48,7 @@ $news = mysqli_query($con, "select * from news");
   <div id="thirdLine">
     <div id="catBlock">
     <?php foreach ($categories as $category) {echo"<div><a href=''>$category[1]</a></div>";} ?>
-       <!--<div>НОВОСТИ</div>
+       <!-- <div>НОВОСТИ</div>
        <div>МНЕНИЯ</div>
        <div>НАУКА</div>
        <div>ЖИЗНЬ</div>
@@ -57,34 +60,42 @@ $news = mysqli_query($con, "select * from news");
        <div>ЗДОРОВЬЕ</div>
        <div>ОБРАЗОВАНИЕ</div> -->
     </div>
-
   </div>
 </header>
-<main>
- 
-    <section class="last-news">
-        <div class="container">
-        <?php
-        
-        foreach($news as $new){
-          $new_id = $new['news_id'];
-          echo  "<br><a href='oneNew.php?new=$new_id'>$new_id</a>";
-                    echo "<div id='headlineGrid'>
-                    <div id='headlineForm'>$new[title]</div>
-                     </div> <br>";
-                    echo "<img src='images/news/$new[image]' style='margin-left:150px; width:500px'>";
-                    $new_id++;
-                }
-        ?>
-         
-        
-        </div>
+<div class="void"></div>
+<div class="void2"></div>
+<h1 id="h1">Панель администратора</h1>
+
+<div class='admin_content d-flex'>
+    <section class="col_1">
+    <h2 id="h2">Список новостей:</h2> <!--это echo --> 
+        <ul>
+            <?php
+            foreach ($news as $new) {echo "<li><a href='?new=". $new[0] ."'>".$new[1]."</a></li>";}
+            ?>
+        </ul>
     </section>
-</main>
-<!--<nav>
-<li><a href="/task.php?task=0">1</a></li>
-<li><a href="/task.php?task=1">2</a></li>
-<li><a href="/task.php?task=2">3</a></li>
-</nav>-->
+    <section class="col_2">
+    <h2 id="h2"><?=$id_new?"Редактирование новости №$id_new":"Создание новости";?></h2>
+    <div id="formGrid">
+  <form method="post" action="<?=$id_new?"/update":"/create";?>NewValid.php" enctype="multipart/form-data">
+    <label for="newHeadline">Заголовок новости</label>
+    <input type="text" id="newHeadline" name="newHeadline">
+    <label for="newImage" id="labelImage">Изображение</label>
+    <input type="file" id="newImage" name="newImage">
+    <label for="newText" id="labelText">Текст новости</label>
+    <textarea id="newText" name="newText"></textarea>
+    <label for="newCategory" id="labelCategory">Категория</label>
+    <select id="newCategory" name="newCategory">
+      <?php 
+      foreach ($categories as $cat) {$id_cat = $cat[0];   $name = $cat[1];
+        echo "<option value='$id_cat'>$name</option>";} ?>
+    </select>
+    <input type="submit" value="Добавить" id="buttonForm">
+  </form>
+</div>
+    </section>
+</div>
+
 </body>
 </html>

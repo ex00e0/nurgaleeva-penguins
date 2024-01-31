@@ -1,18 +1,25 @@
 <?php 
+require "connect.php";
+$news = mysqli_query($con, "select * from news");
+?>
+<?php include ( "date.php"); ?>
+<?php 
 include "connect.php";                 //выражение include включает и выполняет указанный файл
 $query_get_category = "SELECT * FROM categories ";
 $categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));       //получаем результат запроса из переменной query_get_category
 //и преобразуем его в двумерный массив, где каждый элемент - это массив с построчным получением кортежей из таблицы результата запроса
 $news = mysqli_query($con, "select * from news");
+$new_id = isset($_GET['new'])?$_GET['new']:false;
+$queryNewId = "SELECT * FROM news WHERE news_id='$new_id'";
+$queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
 ?>
-<?php include ( "date.php"); ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<link href="css/style.css" rel="stylesheet">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>index</title>
+   <link href="css/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание новости</title>
 </head>
 <body>
 
@@ -45,7 +52,7 @@ $news = mysqli_query($con, "select * from news");
   <div id="thirdLine">
     <div id="catBlock">
     <?php foreach ($categories as $category) {echo"<div><a href=''>$category[1]</a></div>";} ?>
-       <!--<div>НОВОСТИ</div>
+       <!-- <div>НОВОСТИ</div>
        <div>МНЕНИЯ</div>
        <div>НАУКА</div>
        <div>ЖИЗНЬ</div>
@@ -57,34 +64,35 @@ $news = mysqli_query($con, "select * from news");
        <div>ЗДОРОВЬЕ</div>
        <div>ОБРАЗОВАНИЕ</div> -->
     </div>
-
   </div>
 </header>
+<div class="void"></div>
+<div class="void2"></div>
 <main>
- 
     <section class="last-news">
         <div class="container">
         <?php
-        
-        foreach($news as $new){
-          $new_id = $new['news_id'];
-          echo  "<br><a href='oneNew.php?new=$new_id'>$new_id</a>";
+        function dateRev ($pub_date) {$phpdate = strtotime ( $pub_date );
+                                      $month = date('m');
+                                      $monthArr = ["01"=>'Января', "02"=>'Февраля', "03"=>'Марта', "04"=>'Апреля', "05"=>'Мая', "06"=>'Июня', "07"=>'Июля', "08"=>'Августа', "09"=>'Сентября', "10"=>'Октября', "11"=>'Ноября', "12"=>'Декабря',];
+                                      foreach ($monthArr as $keys => $names) {if ($keys==$month) {$month=$names;
+                                                                                                  break;} }
+                                      return date ( "d"." $month "."Y H:i:s" , $phpdate );}
+                foreach($queryNewId as $new){
                     echo "<div id='headlineGrid'>
-                    <div id='headlineForm'>$new[title]</div>
+                    <div id='headlineForm'>$new[2]</div>
                      </div> <br>";
-                    echo "<img src='images/news/$new[image]' style='margin-left:150px; width:500px'>";
-                    $new_id++;
+                    echo "<img src='images/news/$new[1]' style='margin-left:150px; width:500px'>";
+                    echo "<p style='margin-left:150px; color:#4B5157;'>$new[3]</p>";
+                    $pub_date = $new[5];
+                    $pub_date = dateRev($pub_date);
+                    echo "<p style='margin-left:150px; color:#4B5157;'><i>$pub_date</i></p>";
+                    $cat_id = $new[4]-1;
+                    echo "<p style='margin-left:150px; color:#4B5157;'>Категория:<b>". $categories[$cat_id][1]."</b></p>";
                 }
-        ?>
-         
-        
+            ?>
         </div>
     </section>
 </main>
-<!--<nav>
-<li><a href="/task.php?task=0">1</a></li>
-<li><a href="/task.php?task=1">2</a></li>
-<li><a href="/task.php?task=2">3</a></li>
-</nav>-->
 </body>
 </html>

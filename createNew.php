@@ -1,8 +1,9 @@
-<?php
-include "connect.php";
-$queryCategory = "SELECT * FROM categories";
-$categories = mysqli_fetch_all(mysqli_query($con, $queryCategory));
-
+<?php 
+include "connect.php";                 //выражение include включает и выполняет указанный файл
+$query_get_category = "SELECT * FROM categories ";
+$categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));       //получаем результат запроса из переменной query_get_category
+//и преобразуем его в двумерный массив, где каждый элемент - это массив с построчным получением кортежей из таблицы результата запроса
+$news = mysqli_query($con, "select * from news");
 ?>
 <!DOCTYPE html>
 <html lang="ru">
