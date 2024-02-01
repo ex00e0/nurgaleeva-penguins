@@ -167,10 +167,11 @@
        margin-bottom: 5px;
        margin-left:70px;
        text-decoration: none;}
-.col_1 a:not(#plusA) {margin-bottom: 15px;
+.col_1 a:not(#plusA, #minusA) {margin-bottom: 15px;
            width:70%;
            border-bottom: 1px solid #4B5157;}
 #preview {width:10vmax;
        margin-left:70px;}
-#plus {width:3vmax;
+#plus, #minus {width:3vmax;
 margin-top: 20px;}
+#voidvoid {height:5vmax;}

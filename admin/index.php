@@ -71,9 +71,11 @@ if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM n
     <h2 id="h2">Список новостей:</h2> <!--это echo --> 
         <ul>
             <?php
-            foreach ($news as $new) {echo "<li><a href='?new=". $new[0] ."'>".$new[1]."</a></li>";}
+            foreach ($news as $new) {echo "<li><a href='?new=". $new[0] ."'>".$new[1]."</a></li>";
+                                     echo "<a href='deleteNewValid.php?new=".$new[0]."' id='minusA'><img src='../images/free-icon-minus-2734848.png' id='minus'></a>";}
             ?>
         </ul>
+        <div id="voidvoid"></div>
         <a href="/admin" id="plusA"><img src="../images/free-icon-plus-3303893.png" id="plus"></a>
     </section>
     <section class="col_2">
