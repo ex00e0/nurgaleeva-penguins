@@ -100,11 +100,29 @@
                      grid-template-rows: 100%;
                      grid-template-columns: 8% 1fr 8%;
                      height:30vmax;}
+#formGrid2 {display:grid;
+                            grid-template-rows: 100%;
+                            grid-template-columns: 100%;
+                            height:15vmax;}
+#formGrid3 {display:grid;
+                                   grid-template-rows: 100%;
+                                   grid-template-columns: 100%;
+                                   height:10vmax;}
       #headlineForm {color:#262D33;
                  grid-column:2;
                  font-size:2vmax;
-                 font-family:"Lato Heavy";}   
-      form {display:grid;
+                 font-family:"Lato Heavy";} 
+.reg {display:grid;
+       row-gap:10%;
+       grid-template-rows: 1fr 1fr 1fr 1fr;
+       grid-template-columns: 100%;
+       width:70%;}  
+.auth {display:grid;
+              row-gap:10%;
+              grid-template-rows: 1fr 1fr 1fr;
+              grid-template-columns: 100%;
+              width:70%;}  
+      form:not(.regauth) {display:grid;
             grid-column:2;
             grid-template-rows: 7% 7% 3% 7% 7% 3% 7% 25% 3% 7% 7% 3% 1fr;
             grid-template-columns: 100%;
@@ -175,3 +193,16 @@
 #plus, #minus {width:3vmax;
 margin-top: 20px;}
 #voidvoid {height:5vmax;}
+
+.padding {padding-left:2%;}
+.buttonFormRegAuth {
+       border-radius: 100vmax;
+       border:none;
+       height:100%;
+       align-self:center;
+       width:25%;
+       color:white;
+       font-family:"Lato Heavy";
+       font-size:1vmax;
+       background-color: #262D33;
+       justify-self:right;}
