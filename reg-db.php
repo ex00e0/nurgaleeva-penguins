@@ -2,6 +2,11 @@
 $login = strip_tags(trim($_POST['login'])); // Удаляет все лишнее и записываем значение в переменную //$login
 $name = strip_tags(trim($_POST['name']));
 $pass = strip_tags(trim($_POST['pass'])); 
+
+if(mb_strlen($login) == 0 || mb_strlen($name) == 0 || mb_strlen($pass) == 0){
+	echo "У вас есть незаполненные поля";
+	exit();
+}
 if(mb_strlen($login) < 5 || mb_strlen($login) > 100){
 	echo "Недопустимая длина логина";
 	exit();
@@ -13,5 +18,6 @@ if(!empty($user1)){
 	echo "Данный логин уже используется!";
 	exit();
 }
-mysqli_query($con,"INSERT INTO users (email, password, username) VALUES('$login', '$pass', '$name')");
+$res = mysqli_query($con,"INSERT INTO users (email, password, username) VALUES('$login', '$pass', '$name')");
+if ($res == 1) {echo "<script>alert('Вы успешно зарегистировались!');</script>";}
 ?>

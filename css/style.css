@@ -50,6 +50,8 @@
                color:#4B5157;
                font-family:"Lato";
                font-size: 1.15vmax;}
+       #signIn a {text-decoration: none;
+                  color:#4B5157;}
       #secondLine {grid-row:2;
                   grid-column:2;
                  display:grid;
@@ -112,6 +114,8 @@
                  grid-column:2;
                  font-size:2vmax;
                  font-family:"Lato Heavy";} 
+#headlineForm a {color:#262D33;
+                 text-decoration: none;}
 .reg {display:grid;
        row-gap:10%;
        grid-template-rows: 1fr 1fr 1fr 1fr;
@@ -206,3 +210,10 @@ margin-top: 20px;}
        font-size:1vmax;
        background-color: #262D33;
        justify-self:right;}
+
+#regA {text-decoration: none;
+      color:#262D33;
+      font-family:"Lato Heavy";
+      font-size:1vmax;}
+#nameCompany a {text-decoration: none;
+               color:#262D33;}

@@ -32,7 +32,7 @@ $news = mysqli_query($con, "select * from news");
     <svg id="iconSignIn" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M16 15.6316C14.3675 17.2105 11.7008 18 8 18C4.29917 18 1.63251 17.2105 0 15.6316C0 12.3481 1.90591 9.98316 4.70588 9C5.60059 9.41686 6.59455 10 8 10C9.40545 10 10.3311 9.39256 11.2941 9C14.0575 9.99655 16 12.3748 16 15.6316ZM8 8C5.79086 8 4 6.20914 4 4C4 1.79086 5.79086 0 8 0C10.2091 0 12 1.79086 12 4C12 6.20914 10.2091 8 8 8Z" fill="#BCBFC2"/>
     </svg>
-    <div id="signIn">Войти</div>
+    <div id="signIn"><a href='/auth.php'>Войти</a></div>
   </div>
   <div id="secondLine">
      <div id="nameCompany">Пингвины</div>
@@ -68,9 +68,9 @@ $news = mysqli_query($con, "select * from news");
         
         foreach($news as $new){
           $new_id = $new['news_id'];
-          echo  "<br><a href='oneNew.php?new=$new_id'>$new_id</a>";
+          echo  "<br>";
                     echo "<div id='headlineGrid'>
-                    <div id='headlineForm'>$new[title]</div>
+                    <div id='headlineForm'><a href='oneNew.php?new=$new_id'>$new[title]</a></div>
                      </div> <br>";
                     echo "<img src='images/news/$new[image]' style='margin-left:150px; width:500px'>";
                     $new_id++;

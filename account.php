@@ -1,24 +1,23 @@
-
-<?php include ( "D:\OSPanel\domains\Nurgaleeva-penguins\date.php"); ?>
 <?php 
-include "D:\OSPanel\domains\Nurgaleeva-penguins\connect.php"; 
-$news = mysqli_fetch_all(mysqli_query($con, "select news_id, title from news"));
+include "connect.php";                 //выражение include включает и выполняет указанный файл
 $query_get_category = "SELECT * FROM categories ";
-$categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));
-
-$id_new = isset($_GET["new"])?$_GET["new"]:false;
-if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM news WHERE news_id=$id_new")); }
+$categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));       //получаем результат запроса из переменной query_get_category
+//и преобразуем его в двумерный массив, где каждый элемент - это массив с построчным получением кортежей из таблицы результата запроса
+$news = mysqli_query($con, "select * from news");
 ?>
+<?php include ( "date.php"); ?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-   <link href="\css\style.css" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin</title>
+<meta charset="utf-8">
+<title>Аккаунт</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="css/style.css" rel="stylesheet">
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"      rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script> -->
 </head>
 <body>
-
 <header>
   <div id="firstLine">
     <div id="menuBlock">
@@ -35,10 +34,10 @@ if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM n
     <svg id="iconSignIn" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M16 15.6316C14.3675 17.2105 11.7008 18 8 18C4.29917 18 1.63251 17.2105 0 15.6316C0 12.3481 1.90591 9.98316 4.70588 9C5.60059 9.41686 6.59455 10 8 10C9.40545 10 10.3311 9.39256 11.2941 9C14.0575 9.99655 16 12.3748 16 15.6316ZM8 8C5.79086 8 4 6.20914 4 4C4 1.79086 5.79086 0 8 0C10.2091 0 12 1.79086 12 4C12 6.20914 10.2091 8 8 8Z" fill="#BCBFC2"/>
     </svg>
-    <div id="signIn"><a href='../auth.php'>Войти</a></div>
+    <div id="signIn"><a href='/auth.php'><?php print_r($_COOKIE['name']) ?></a></div>
   </div>
   <div id="secondLine">
-     <div id="nameCompany"><a href=''>Пингвины</a></div>
+     <div id="nameCompany"><a href='index.php'>Пингвины</a></div>
      <div id="date"><?php echo date("$week, $month d, 20y"); ?></div>
      <svg id="tempIcon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M9 15.4763C9.4151 15.4763 9.74939 15.8106 9.74939 16.2257V17.2506C9.74939 17.6657 9.4151 18 9 18C8.5849 18 8.25061 17.6657 8.25061 17.2506V16.2257C8.25061 15.8106 8.5849 15.4763 9 15.4763ZM9 2.52367C8.5849 2.52367 8.25061 2.18939 8.25061 1.77429V0.749388C8.25061 0.334286 8.5849 0 9 0C9.4151 0 9.74939 0.334286 9.74939 0.749388V1.77429C9.74939 2.18939 9.4151 2.52367 9 2.52367ZM17.2506 8.25061C17.6657 8.25061 18 8.5849 18 9C18 9.4151 17.6657 9.74939 17.2506 9.74939H16.2257C15.8106 9.74939 15.4763 9.4151 15.4763 9C15.4763 8.5849 15.8106 8.25061 16.2257 8.25061H17.2506ZM1.77429 8.25061C2.18939 8.25061 2.52367 8.5849 2.52367 9C2.52367 9.4151 2.18939 9.74939 1.77429 9.74939H0.749388C0.334286 9.74939 0 9.4151 0 9C0 8.5849 0.334286 8.25061 0.749388 8.25061H1.77429ZM14.6388 4.42286C14.3449 4.71306 13.871 4.71673 13.5771 4.42286C13.2833 4.12898 13.2833 3.6551 13.5771 3.36122L14.3008 2.63755C14.5947 2.34367 15.0686 2.34367 15.3624 2.63755C15.6563 2.93143 15.6563 3.40531 15.3624 3.69918L14.6388 4.42286ZM3.36122 13.5771C3.6551 13.2869 4.12898 13.2833 4.42286 13.5771C4.71673 13.871 4.71673 14.3449 4.42286 14.6388L3.69918 15.3624C3.40531 15.6563 2.93143 15.6563 2.63755 15.3624C2.34367 15.0686 2.34367 14.5947 2.63755 14.3008L3.36122 13.5771ZM14.6388 13.5771L15.3624 14.3008C15.6563 14.5947 15.6563 15.0686 15.3624 15.3624C15.0686 15.6563 14.5947 15.6563 14.3008 15.3624L13.5771 14.6388C13.2833 14.3449 13.2833 13.871 13.5771 13.5771C13.871 13.2833 14.3449 13.2833 14.6388 13.5771ZM3.36122 4.42286L2.63755 3.69918C2.34367 3.40531 2.34367 2.93143 2.63755 2.63755C2.93143 2.34367 3.40531 2.34367 3.69918 2.63755L4.42286 3.36122C4.71673 3.6551 4.71673 4.12898 4.42286 4.42286C4.12898 4.71673 3.6551 4.71673 3.36122 4.42286ZM9 3.36122C12.1078 3.36122 14.6388 5.89224 14.6388 9C14.6388 12.1114 12.1078 14.6388 9 14.6388C5.88857 14.6388 3.36122 12.1078 3.36122 9C3.36122 5.88857 5.89224 3.36122 9 3.36122ZM9 13.1363C11.2812 13.1363 13.1363 11.2812 13.1363 9C13.1363 6.71878 11.2812 4.86367 9 4.86367C6.71878 4.86367 4.86367 6.71878 4.86367 9C4.86367 11.2812 6.71878 13.1363 9 13.1363Z" fill="#BCBFC2"/>
@@ -48,7 +47,7 @@ if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM n
   <div id="thirdLine">
     <div id="catBlock">
     <?php foreach ($categories as $category) {echo"<div><a href=''>$category[1]</a></div>";} ?>
-       <!-- <div>НОВОСТИ</div>
+       <!--<div>НОВОСТИ</div>
        <div>МНЕНИЯ</div>
        <div>НАУКА</div>
        <div>ЖИЗНЬ</div>
@@ -60,50 +59,12 @@ if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM n
        <div>ЗДОРОВЬЕ</div>
        <div>ОБРАЗОВАНИЕ</div> -->
     </div>
+
   </div>
 </header>
 <div class="void"></div>
-<div class="void2"></div>
-<h1 id="h1">Панель администратора</h1>
-
-<div class='admin_content d-flex'>
-    <section class="col_1">
-    <h2 id="h2">Список новостей:</h2> <!--это echo --> 
-        <ul>
-            <?php
-            foreach ($news as $new) {echo "<li><a href='?new=". $new[0] ."'>".$new[1]."</a></li>";
-                                     echo "<a href='deleteNewValid.php?new=".$new[0]."' id='minusA'><img src='../images/free-icon-minus-2734848.png' id='minus'></a>";}
-            ?>
-        </ul>
-        <div id="voidvoid"></div>
-        <a href="/admin" id="plusA"><img src="../images/free-icon-plus-3303893.png" id="plus"></a>
-    </section>
-    <section class="col_2">
-    <h2 id="h2"><?=$id_new?"Редактирование новости №$id_new":"Создание новости";?></h2>
-    <div id="formGrid">
-  <form method="post" action="<?=$id_new?"update":"/create";?>NewValid.php" enctype="multipart/form-data">
-    <label for="newHeadline">Заголовок новости</label>
-    <input type="text" id="newHeadline" name="newHeadline" value='<?=$id_new?$new_info["title"]:"";?>'>
-    <label for="newImage" id="labelImage">Изображение</label>
-    <input type="file" id="newImage" name="newImage">
-  
-    <label for="newText" id="labelText">Текст новости</label>
-    <textarea id="newText" name="newText"><?=$id_new?$new_info["content"]:"";?></textarea>
-    <label for="newCategory" id="labelCategory">Категория</label>
-    <select id="newCategory" name="newCategory">
-      <?php 
-      foreach ($categories as $cat) {$id_cat = $cat[0];   $name = $cat[1];
-        if ($new_info["category_id"]==$id_cat) { echo "<option value='$id_cat' selected>$name</option>";}
-        else {echo "<option value='$id_cat'>$name</option>";}
-        } ?>
-    </select>
-    <?=$id_new? "<input type='hidden' name='id' value='$id_new'>":"";?>
-    <input type="submit" value="<?=$id_new?"Изменить":"Добавить";?>" id="buttonForm">
-  </form>
-</div>
-<?=$id_new? "<img src='../images/news/".$new_info['image']."' alt='такого изображения нет' id='preview'>":"";?>
-    </section>
-</div>
-
+	<h1 id='headlineForm'>Привет, <?php print_r($_COOKIE['name']) ?>!</h1>
+	<a href="exit.php">Чтобы выйти, нажмите по ссылке.</a>
+    
 </body>
 </html>
