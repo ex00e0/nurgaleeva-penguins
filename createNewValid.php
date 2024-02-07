@@ -23,8 +23,8 @@ else if (substr($newImage["type"], 0, 5) != "image") {echo check_error('Приш
 else {$insert = "INSERT INTO news (image, title, content, category_id) VALUES ('$newImage[name]', '$newHeadline', '$newText','$newCategory')";
     $result = mysqli_query($con, $insert);
     if ($result) {move_uploaded_file($newImage["tmp_name"], "images/news/$newImage[name]");
-        check_error("Новость успешно создана");}
-    else check_error("Произошла ошибка:". mysqli_error($con)); }  
+        echo check_error("Новость успешно создана");}
+    else echo check_error("Произошла ошибка:". mysqli_error($con)); }  
 return $result;   }
 check($con, $newImage, $newHeadline, $newText, $newCategory);
 // if () {echo "Отправлено в БД";}

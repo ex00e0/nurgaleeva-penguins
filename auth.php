@@ -46,7 +46,7 @@ $news = mysqli_query($con, "select * from news");
   </div>
   <div id="thirdLine">
     <div id="catBlock">
-    <?php foreach ($categories as $category) {echo"<div><a href=''>$category[1]</a></div>";} ?>
+    <?php foreach ($categories as $category) {echo"<div><a href='index.php?category=$category[0]'>$category[1]</a></div>";} ?>
        <!--<div>НОВОСТИ</div>
        <div>МНЕНИЯ</div>
        <div>НАУКА</div>
