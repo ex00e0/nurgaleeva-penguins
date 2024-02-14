@@ -12,6 +12,7 @@ $news = mysqli_query($con, "select * from news");
 $new_id = isset($_GET['new'])?$_GET['new']:false;
 $queryNewId = "SELECT * FROM news WHERE news_id='$new_id'";
 $queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
+//получение id выбранной новости, выборка данной новости и преобразование в массив
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -72,12 +73,15 @@ $queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
     <section class="last-news">
         <div class="container">
         <?php
-        function dateRev ($pub_date) {$phpdate = strtotime ( $pub_date );
+        function dateRev ($pub_date) {$phpdate = strtotime ( $pub_date ); //преобразование даты из базы данных в формат даты php
                                       $month = date('m');
-                                      $monthArr = ["01"=>'Января', "02"=>'Февраля', "03"=>'Марта', "04"=>'Апреля', "05"=>'Мая', "06"=>'Июня', "07"=>'Июля', "08"=>'Августа', "09"=>'Сентября', "10"=>'Октября', "11"=>'Ноября', "12"=>'Декабря',];
+                                      $monthArr = ["01"=>'Января', "02"=>'Февраля', "03"=>'Марта', "04"=>'Апреля', 
+      "05"=>'Мая', "06"=>'Июня', "07"=>'Июля', "08"=>'Августа', "09"=>'Сентября', "10"=>'Октября', "11"=>'Ноября', "12"=>'Декабря',];
                                       foreach ($monthArr as $keys => $names) {if ($keys==$month) {$month=$names;
                                                                                                   break;} }
+                              //изменение цифры месяца на русское название
                                       return date ( "d"." $month "."Y H:i:s" , $phpdate );}
+              //возврат даты в необходимом формате
                 foreach($queryNewId as $new){
                     echo "<div id='headlineGrid'>
                     <div id='headlineForm'>$new[2]</div>
@@ -90,6 +94,7 @@ $queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
                     $cat_id = $new[4]-1;
                     echo "<p style='margin-left:150px; color:#4B5157;'>Категория:<b>". $categories[$cat_id][1]."</b></p>";
                 }
+              //вывод подробной информации о новости с обращением к элементам массива
             ?>
         </div>
     </section>

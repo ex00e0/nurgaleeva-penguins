@@ -6,8 +6,10 @@ $news = mysqli_fetch_all(mysqli_query($con, "select news_id, title from news"));
 $query_get_category = "SELECT * FROM categories ";
 $categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));
 
-$id_new = isset($_GET["new"])?$_GET["new"]:false;
+$id_new = isset($_GET["new"])?$_GET["new"]:false;                                                                               
 if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM news WHERE news_id=$id_new")); }
+//id новости, передаваемый через ссылочный метод get
+//если id есть, то происходит получение из бд новости с нужным id
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -68,18 +70,21 @@ if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM n
 
 <div class='admin_content d-flex'>
     <section class="col_1">
-    <h2 id="h2">Список новостей:</h2> <!--это echo --> 
+    <h2 id="h2">Список новостей:</h2> 
         <ul>
             <?php
-            foreach ($news as $new) {echo "<li><a href='?new=". $new[0] ."'>".$new[1]."</a></li>";
-                                     echo "<a href='deleteNewValid.php?new=".$new[0]."' id='minusA'><img src='../images/free-icon-minus-2734848.png' id='minus'></a>";}
+            foreach ($news as $new) {echo "<li><a href='?new=". $new[0] ."'>".$new[1]."</a></li>";  //вывод каждой новости
+  echo "<a href='deleteNewValid.php?new=".$new[0]."' id='minusA'><img src='../images/free-icon-minus-2734848.png' id='minus'></a>";} 
+                                     //вывод кнопки удаления к каждой новости
             ?>
         </ul>
         <div id="voidvoid"></div>
-        <a href="/admin" id="plusA"><img src="../images/free-icon-plus-3303893.png" id="plus"></a>
+        <a href="/admin" id="plusA"><img src="../images/free-icon-plus-3303893.png" id="plus"></a>  
+        <!--кнопка создания новости-->
     </section>
     <section class="col_2">
-    <h2 id="h2"><?=$id_new?"Редактирование новости №$id_new":"Создание новости";?></h2>
+    <h2 id="h2"><?=$id_new?"Редактирование новости №$id_new":"Создание новости";?></h2> 
+    <!--в зависимости от переданного id_new выводится форма создания или же редактирования -->
     <div id="formGrid">
   <form method="post" action="<?=$id_new?"update":"/create";?>NewValid.php" enctype="multipart/form-data">
     <label for="newHeadline">Заголовок новости</label>
@@ -95,13 +100,16 @@ if ($id_new) {$new_info = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM n
       foreach ($categories as $cat) {$id_cat = $cat[0];   $name = $cat[1];
         if ($new_info["category_id"]==$id_cat) { echo "<option value='$id_cat' selected>$name</option>";}
         else {echo "<option value='$id_cat'>$name</option>";}
-        } ?>
+        } 
+        //для редактирования текущая категория помечается отмеченной
+        ?>
     </select>
     <?=$id_new? "<input type='hidden' name='id' value='$id_new'>":"";?>
     <input type="submit" value="<?=$id_new?"Изменить":"Добавить";?>" id="buttonForm">
   </form>
 </div>
 <?=$id_new? "<img src='../images/news/".$new_info['image']."' alt='такого изображения нет' id='preview'>":"";?>
+<!--вывод текущего изображения при редактировании-->
     </section>
 </div>
 

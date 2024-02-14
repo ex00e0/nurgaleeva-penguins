@@ -126,7 +126,7 @@
               grid-template-rows: 1fr 1fr 1fr;
               grid-template-columns: 100%;
               width:70%;}  
-      form:not(.regauth) {display:grid;
+      form:not(.regauth, #dateSort) {display:grid;
             grid-column:2;
             grid-template-rows: 7% 7% 3% 7% 7% 3% 7% 25% 3% 7% 7% 3% 1fr;
             grid-template-columns: 100%;
@@ -217,3 +217,9 @@ margin-top: 20px;}
       font-size:1vmax;}
 #nameCompany a {text-decoration: none;
                color:#262D33;}
+
+           #dateSort {display:grid;
+              grid-template-rows: 100%;
+              grid-template-columns: 8% 1fr 8%;
+              height:2.5vmax;}
+              #sort {grid-column:2;}
