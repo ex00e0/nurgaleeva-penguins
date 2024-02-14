@@ -1,23 +1,30 @@
 <?php 
-include "connect.php";                 //выражение include включает и выполняет указанный файл
+include "connect.php";              
+   //выражение include включает и выполняет указанный файл
 $query_get_category = "SELECT * FROM categories ";
-$categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));       //получаем результат запроса из переменной query_get_category
-//и преобразуем его в двумерный массив, где каждый элемент - это массив с построчным получением кортежей из таблицы результата запроса
+$categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));     
+  //получаем результат запроса из переменной query_get_category
+//и преобразуем его в двумерный массив, где каждый элемент - 
+//это массив с построчным получением кортежей из таблицы результата запроса
 $news = mysqli_query($con, "select * from news");
 
-
-$category_get = isset($_GET['category'])?$_GET['category']:false;      
+$sort = isset($_GET['sort']) ? $_GET['sort'] : false;
+$category_get = isset($_GET['category_get'])?$_GET['category_get']:false;      
+// session_start();
+// if ($category_get) {$_SESSION['category_get']=$category_get;}
+// else {$_SESSION['category_get']=$category_get;}
     //получение значения category из url-строки с помощью массива $_GET
-
 ?>
 <?php include ( "date.php"); ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <link href="css/style.css" rel="stylesheet">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>index</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -49,7 +56,7 @@ $category_get = isset($_GET['category'])?$_GET['category']:false;
   </div>
   <div id="thirdLine">
     <div id="catBlock">
-    <?php foreach ($categories as $category) {echo"<div><a href='?category=$category[0]'>$category[1]</a></div>";} ?>  
+    <?php foreach ($categories as $category) {echo"<div><a href='?category_get=$category[0]'>$category[1]</a></div>";} ?>  
       <!--отправка ссылочным методом get id категории-->
 
 
@@ -71,9 +78,29 @@ $category_get = isset($_GET['category'])?$_GET['category']:false;
 </header>
 <main>
    <div class='void'></div>
+      <form id='dateSort'>
+          <select id='sort' name='sort'>
+            <option value="" <?= ($sort and $sort == "") ? "selected" : ""; ?>>Без сортировки</option>
+            <option value="publish_date DESC" <?= ($sort and $sort == "publish_date DESC") ? "selected" : ""; ?>>Сортировать по дате (сначала новые)</option>
+            <option value="publish_date ASC" <?= ($sort and $sort == "publish_date ASC") ? "selected" : ""; ?>>Сортировать по дате (сначала старые)</option>
+          </select>
+          <input type='hidden' value="<?=$category_get?>" name="category_get">
+      </form>
+   <div class='void'></div>
     <section class="last-news">
         <div class="container">
+
         <?php
+        $querySort = "select * from news";
+        // session_start();
+        if ($category_get ) { 
+  $querySort .= " where category_id=$category_get";}
+if ($sort) {$querySort .= " order by $sort";}
+
+      echo $querySort;
+    $news = mysqli_query($con, $querySort);
+
+
         $catCount = 0;
         foreach($news as $new){if ($category_get) {if ($category_get==$new['category_id']) {
           //проверка на существование значения ключа category и совпадения категории новости с этим значением
@@ -87,12 +114,14 @@ $category_get = isset($_GET['category'])?$_GET['category']:false;
               //вывод названия и изображения новости
                }
         else {
-          $new_id = $new['news_id'];
+          $new_id = $new['news_id'];          
           echo  "<br>";
                     echo "<div id='headlineGrid'>
-                    <div id='headlineForm'><a href='oneNew.php?new=$new_id'>$new[title]</a></div>
+                    <div id='headlineForm'><a href='oneNew.php?new=$new_id'>$new[title]</a></div> 
                      </div> <br>";
+                     //вывод заголовка-ссылки на более подробное описание новости
                     echo "<img src='images/news/$new[image]' style='margin-left:150px; width:500px'>";
+                    //вывод изображения новости
                 $catCount++;}
           }
           if ($catCount==0) {echo "<div id='headlineForm'>Новостей нет</div>";}
@@ -107,5 +136,10 @@ $category_get = isset($_GET['category'])?$_GET['category']:false;
 <li><a href="/task.php?task=1">2</a></li>
 <li><a href="/task.php?task=2">3</a></li>
 </nav>-->
+<script>
+    $("#sort").change(function() {
+      $("#dateSort").submit();
+    });
+  </script>
 </body>
 </html>
