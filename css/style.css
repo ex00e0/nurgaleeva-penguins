@@ -34,10 +34,14 @@
                    grid-column:2;
                    align-self:center;}
       #search {grid-column:4;
-              align-self:center;
+              width:100%;
+              grid-row:1;
               color:#D9DADB;
               font-size:1.15vmax;
               font-family:"Lato";}
+       #search input {width:100%;
+                      height:100%;
+                      border:none;}
       #subscribeBlock {grid-column:5;
                        display:grid;
                        grid-template-columns: 30% 1fr;
@@ -126,7 +130,7 @@
               grid-template-rows: 1fr 1fr 1fr;
               grid-template-columns: 100%;
               width:70%;}  
-      form:not(.regauth, #dateSort) {display:grid;
+      form:not(.regauth, #dateSort, #search) {display:grid;
             grid-column:2;
             grid-template-rows: 7% 7% 3% 7% 7% 3% 7% 25% 3% 7% 7% 3% 1fr;
             grid-template-columns: 100%;
@@ -134,7 +138,7 @@
       form label {color:#4B5157;
                   font-family: "Lato";
                   font-size:1.15vmax;}  
-      input:not(#newImage, #buttonForm), textarea, select {padding-left: 3%;
+      input:not(#newImage, #buttonForm, #text), textarea, select {padding-left: 3%;
                        width:100%;
                        box-sizing: border-box;
                        color:#4B5157;
