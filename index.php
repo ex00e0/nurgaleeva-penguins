@@ -11,11 +11,13 @@ $news = mysqli_query($con, "select * from news");
 $sort = isset($_GET['sort']) ? $_GET['sort'] : false;
 $category_get = isset($_GET['category_get'])?$_GET['category_get']:false;     
 $textSearch = isset($_GET['text']) ? $_GET['text'] : false;
+//переменная для получения текста из поля ввода
 
-// session_start();
-// if ($category_get) {$_SESSION['category_get']=$category_get;}
-// else {$_SESSION['category_get']=$category_get;}
-    //получение значения category из url-строки с помощью массива $_GET
+$paginate_count = 3;  //limit n
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$offset = $page * $paginate_count - $paginate_count;   //offset m
+
+
 ?>
 <?php include ( "date.php"); ?>
 <!DOCTYPE html>
@@ -86,10 +88,13 @@ $textSearch = isset($_GET['text']) ? $_GET['text'] : false;
       <form id='dateSort'>
           <select id='sort' name='sort'>
             <option value="" <?= ($sort and $sort == "") ? "selected" : ""; ?>>Без сортировки</option>
-            <option value="publish_date DESC" <?= ($sort and $sort == "publish_date DESC") ? "selected" : ""; ?>>Сортировать по дате (сначала новые)</option>
-            <option value="publish_date ASC" <?= ($sort and $sort == "publish_date ASC") ? "selected" : ""; ?>>Сортировать по дате (сначала старые)</option>
+            <option value="publish_date DESC" <?= ($sort and $sort == "publish_date DESC") ? "selected" : ""; ?>>
+            Сортировать по дате (сначала новые)</option>
+            <option value="publish_date ASC" <?= ($sort and $sort == "publish_date ASC") ? "selected" : ""; ?>>
+            Сортировать по дате (сначала старые)</option>
           </select>
           <input type='hidden' value="<?=$category_get?>" name="category_get">
+          <!-- передача скрытого поля ввода с id категории -->
       </form>
    <div class='void'></div>
     <section class="last-news">
@@ -97,13 +102,13 @@ $textSearch = isset($_GET['text']) ? $_GET['text'] : false;
 
         <?php
         $querySort = "select * from news";
-        // session_start();
-        if ($category_get ) { 
-  $querySort .= " where category_id=$category_get";}
+        if ($category_get ) {  $querySort .= " where category_id=$category_get";}
 if ($sort) {$querySort .= " order by $sort";}
+//изменение строки запроса к бд
 
-      // echo $querySort;
       if ($textSearch) { $querySort .= " WHERE title LIKE '%$textSearch%'"; }
+      $count_news = mysqli_num_rows(mysqli_query($con, $querySort));
+      $querySort .= " LIMIT $paginate_count OFFSET $offset";
     $news = mysqli_query($con, $querySort);
 
 
@@ -136,7 +141,30 @@ if ($sort) {$querySort .= " order by $sort";}
         
         </div>
     </section>
+    
 </main>
+<br><br>
+<nav aria-label="Page navigation example" id='navPag'>
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+<?php
+for ($i=1; $i <= ceil($count_news/$paginate_count); $i++) { ?>
+<li class="page-item"><a class="page-link" href='?page=<?=$i?><?=($sort)?"&sort='$sort'":""?><?=($category_get)?"&category_get='$category_get'":""?>'><?=$i?></a></li>
+<?php } ?>
+    
+
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+<br>
 <!--<nav>
 <li><a href="/task.php?task=0">1</a></li>
 <li><a href="/task.php?task=1">2</a></li>

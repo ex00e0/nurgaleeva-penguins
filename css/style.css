@@ -227,3 +227,20 @@ margin-top: 20px;}
               grid-template-columns: 8% 1fr 8%;
               height:2.5vmax;}
               #sort {grid-column:2;}
+
+#navPag {display:flex;
+        justify-content:center;}
+              .pagination {display:flex;
+                        flex-direction: row;
+                        font-size:2.3vmax;
+                        font-family: "Lato Heavy";
+                        color:#262D33;}
+              .pagination {list-style: none;}
+              .pagination a {color: #262D33;
+              text-decoration: none;}
+              .pagination li {border: 0.1vmax solid #D9DADB;
+                              width:3vmax;
+                            height:3vmax;
+                             display:flex;
+                             align-items: center;
+                            justify-content: center;}
