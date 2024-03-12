@@ -23,6 +23,12 @@ if(!empty($user1)){
 	exit();
 }
 $res = mysqli_query($con,"INSERT INTO users (email, password, username) VALUES('$login', '$pass', '$name')");
-if ($res == 1) {echo "<script>alert('Вы успешно зарегистрировались!');</script>";}
-//ввод данных в бд при успешной регистрации
+
+if ($res == 1) {     //отправка куки и перенос на страницу аккаунта
+   session_start();
+   $_SESSION['user']=mysqli_insert_id($con);
+	// setcookie('user', , time() + 3600, "/");
+	echo "<script>alert('Вы успешно зарегистрировались!');
+	 location.href='account.php'</script>";}
+// ввод данных в бд при успешной регистрации
 ?>

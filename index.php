@@ -13,11 +13,12 @@ $category_get = isset($_GET['category_get'])?$_GET['category_get']:false;
 $textSearch = isset($_GET['text']) ? $_GET['text'] : false;
 //переменная для получения текста из поля ввода
 
-$paginate_count = 3;  //limit n
+$paginate_count = 3;  //limit n, количество новостей на 1 странице
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
-$offset = $page * $paginate_count - $paginate_count;   //offset m
-
-
+//текущая страница
+$offset = $page * $paginate_count - $paginate_count;   
+//offset m, с какой новости начинать вывод
+session_start();
 ?>
 <?php include ( "date.php"); ?>
 <!DOCTYPE html>
@@ -48,10 +49,12 @@ $offset = $page * $paginate_count - $paginate_count;   //offset m
                 <input type="text" name="text" class="text" id='text' placeholder='Поиск' value=""> 
             </form>
     <div id="subscribeBlock"></div>
-    <svg id="iconSignIn" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a href="<?=($_SESSION['user'])?'/account.php':'';?>" id="iconSignIn">
+    <svg viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M16 15.6316C14.3675 17.2105 11.7008 18 8 18C4.29917 18 1.63251 17.2105 0 15.6316C0 12.3481 1.90591 9.98316 4.70588 9C5.60059 9.41686 6.59455 10 8 10C9.40545 10 10.3311 9.39256 11.2941 9C14.0575 9.99655 16 12.3748 16 15.6316ZM8 8C5.79086 8 4 6.20914 4 4C4 1.79086 5.79086 0 8 0C10.2091 0 12 1.79086 12 4C12 6.20914 10.2091 8 8 8Z" fill="#BCBFC2"/>
     </svg>
-    <div id="signIn"><a href='/auth.php'>Войти</a></div>
+    </a>
+    <div id="signIn"><a href="<?=($_SESSION['user'])?'/exit.php':'/auth.php';?>"><?=($_SESSION['user'])?'Выйти':'Войти';?></a></div>
   </div>
   <div id="secondLine">
      <div id="nameCompany"><a href='/'>Пингвины</a></div>        <!--сброс фильтра по нажатию на ссылку-->
@@ -107,8 +110,11 @@ if ($sort) {$querySort .= " order by $sort";}
 //изменение строки запроса к бд
 
       if ($textSearch) { $querySort .= " WHERE title LIKE '%$textSearch%'"; }
+
       $count_news = mysqli_num_rows(mysqli_query($con, $querySort));
+      //подсчет общего количества новостей
       $querySort .= " LIMIT $paginate_count OFFSET $offset";
+      //изменение строки запроса к бд
     $news = mysqli_query($con, $querySort);
 
 
@@ -120,6 +126,9 @@ if ($sort) {$querySort .= " order by $sort";}
                     echo "<div id='headlineGrid'>
                     <div id='headlineForm'><a href='oneNew.php?new=$new_id'>$new[title]</a></div>
                      </div> <br>";
+                     $comments_result = mysqli_query($con, "SELECT * from comments inner join users on users.user_id=comments.user_id WHERE news_id=$new_id");   
+                     $comments = mysqli_num_rows($comments_result);
+                     echo "<p class='marginLEFT'><i>Комментариев: $comments</i></p> <br>";
                     echo "<img src='images/news/$new[image]' style='margin-left:150px; width:500px'>";
                     $catCount++;} 
               //вывод названия и изображения новости
@@ -153,10 +162,12 @@ if ($sort) {$querySort .= " order by $sort";}
     </li>
 <?php
 for ($i=1; $i <= ceil($count_news/$paginate_count); $i++) { ?>
-<li class="page-item"><a class="page-link" href='?page=<?=$i?><?=($sort)?"&sort='$sort'":""?><?=($category_get)?"&category_get='$category_get'":""?>'><?=$i?></a></li>
-<?php } ?>
-    
-
+<li class="page-item">
+  <a class="page-link" href='?page=<?=$i?><?=($sort)?"&sort='$sort'":""?><?=($category_get)?"&category_get='$category_get'":""?>'>
+  <?=$i?></a></li>
+<?php } 
+//вывод номеров страниц в виде ссылок и передача значений сортировки, текущей страницы и категории 
+?>
     <li class="page-item">
       <a class="page-link" href="#" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>

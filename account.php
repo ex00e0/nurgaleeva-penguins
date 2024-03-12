@@ -4,6 +4,10 @@ $query_get_category = "SELECT * FROM categories ";
 $categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));       //получаем результат запроса из переменной query_get_category
 //и преобразуем его в двумерный массив, где каждый элемент - это массив с построчным получением кортежей из таблицы результата запроса
 $news = mysqli_query($con, "select * from news");
+session_start();
+$user_id = $_SESSION['user'];
+// $user_id=$_COOKIE['user'];
+$userData = mysqli_fetch_array(mysqli_query($con, "SELECT * FROM users WHERE user_id=$user_id"));  
 ?>
 <?php include ( "date.php"); ?>
 
@@ -29,12 +33,14 @@ $news = mysqli_query($con, "select * from news");
     <svg id="iconSearch" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M17.4354 16.3951L13.146 11.9395C14.2489 10.6301 14.8532 8.98262 14.8532 7.26749C14.8532 3.26026 11.5888 0 7.57659 0C3.56433 0 0.299988 3.26026 0.299988 7.26749C0.299988 11.2747 3.56433 14.535 7.57659 14.535C9.08284 14.535 10.5182 14.0812 11.7454 13.2199L16.0674 17.7093C16.2481 17.8967 16.4911 18 16.7514 18C16.9979 18 17.2317 17.9062 17.4092 17.7355C17.7863 17.3731 17.7983 16.7721 17.4354 16.3951ZM7.57659 1.89587C10.5423 1.89587 12.9549 4.30552 12.9549 7.26749C12.9549 10.2295 10.5423 12.6391 7.57659 12.6391C4.6109 12.6391 2.19823 10.2295 2.19823 7.26749C2.19823 4.30552 4.6109 1.89587 7.57659 1.89587Z" fill="#BCBFC2"/>
     </svg>
-    <div id="search">Поиск</div>
+    <div id="search" style='align-self:center;'>Поиск</div>
     <div id="subscribeBlock"></div>
-    <svg id="iconSignIn" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a href="<?=($_SESSION['user'])?'/account.php':'';?>" id="iconSignIn">
+    <svg viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M16 15.6316C14.3675 17.2105 11.7008 18 8 18C4.29917 18 1.63251 17.2105 0 15.6316C0 12.3481 1.90591 9.98316 4.70588 9C5.60059 9.41686 6.59455 10 8 10C9.40545 10 10.3311 9.39256 11.2941 9C14.0575 9.99655 16 12.3748 16 15.6316ZM8 8C5.79086 8 4 6.20914 4 4C4 1.79086 5.79086 0 8 0C10.2091 0 12 1.79086 12 4C12 6.20914 10.2091 8 8 8Z" fill="#BCBFC2"/>
     </svg>
-    <div id="signIn"><a href='/auth.php'><?php print_r($_COOKIE['name']) ?></a></div>
+</a>
+    <div id="signIn"><a href='/exit.php'>Выйти</a></div>
   </div>
   <div id="secondLine">
      <div id="nameCompany"><a href='index.php'>Пингвины</a></div>
@@ -63,8 +69,17 @@ $news = mysqli_query($con, "select * from news");
   </div>
 </header>
 <div class="void"></div>
-	<h1 id='headlineForm'>Привет, <?php print_r($_COOKIE['name']) ?>!</h1>
-	<a href="exit.php">Чтобы выйти, нажмите по ссылке.</a>
-    
+	<h1 id='accHeadline'>Изменение данных профиля</h1> 
+  <div class="void"></div>
+	<!-- <a href="exit.php">Чтобы выйти, нажмите по ссылке.</a> --> 
+  <form method="post" action="" enctype="multipart/form-data" id='accForm'>
+    <label for="newHeadline">Имя</label>
+    <input type="text" id="newHeadline" name="newHeadline" value="<?=$userData[1]?>">
+    <label for="newHeadline">Логин</label>
+    <input type="text" id="newHeadline" name="newHeadline" value='<?=$userData[2]?>'>
+    <label for="newHeadline">Пароль</label>
+    <input type="text" id="newHeadline" name="newHeadline" value='<?=$userData[3]?>'>
+    <input type="submit" value="Отправить" id="buttonForm2">
+  </form>
 </body>
 </html>

@@ -10,17 +10,32 @@ $categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));       /
 //и преобразуем его в двумерный массив, где каждый элемент - это массив с построчным получением кортежей из таблицы результата запроса
 $news = mysqli_query($con, "select * from news");
 $new_id = isset($_GET['new'])?$_GET['new']:false;
+if ($new_id) {
 $queryNewId = "SELECT * FROM news WHERE news_id='$new_id'";
 $queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
 //получение id выбранной новости, выборка данной новости и преобразование в массив
+
+
+$comments_result = mysqli_query($con, "SELECT comment_text, comment_date, username from comments inner join users on users.user_id=comments.user_id WHERE news_id=$new_id");   
+$comments = mysqli_fetch_all($comments_result); }
+else {header("Location: /");}
+$monthC = ["01" => "Января", "02" => "Февраля", "03" => "Марта", "04" => "Апреля", "05" => "Мая",
+"06" => "Июня", "07" => "Июля", "08" => "Августа", "09" => "Сентября", "10" => "Октября", "11" => "Ноября", "12" => "Декабря"];
+function date_new($date_old) {global $monthC; 
+                              $date = date("d.m.Y H:i:s", strtotime($date_old));
+                              return substr($date, 0, 2)." ".$monthC[substr($date, 3,2)]." ".substr($date, 6);}
+
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
    <link href="css/style.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание новости</title>
+    <title>Новость</title>
 </head>
 <body>
 
@@ -37,10 +52,12 @@ $queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
     </svg>
     <div id="search">Поиск</div>
     <div id="subscribeBlock"></div>
-    <svg id="iconSignIn" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a href="<?=($_SESSION['user'])?'/account.php':'';?>" id="iconSignIn">
+    <svg viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M16 15.6316C14.3675 17.2105 11.7008 18 8 18C4.29917 18 1.63251 17.2105 0 15.6316C0 12.3481 1.90591 9.98316 4.70588 9C5.60059 9.41686 6.59455 10 8 10C9.40545 10 10.3311 9.39256 11.2941 9C14.0575 9.99655 16 12.3748 16 15.6316ZM8 8C5.79086 8 4 6.20914 4 4C4 1.79086 5.79086 0 8 0C10.2091 0 12 1.79086 12 4C12 6.20914 10.2091 8 8 8Z" fill="#BCBFC2"/>
     </svg>
-    <div id="signIn">Войти</div>
+    </a>
+    <div id="signIn"><a href="<?=($_SESSION['user'])?'/exit.php':'/auth.php';?>"><?=($_SESSION['user'])?'Выйти':'Войти';?></a></div>
   </div>
   <div id="secondLine">
      <div id="nameCompany"><a href='/'>Пингвины</a></div>
@@ -71,7 +88,7 @@ $queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
 <div class="void2"></div>
 <main>
     <section class="last-news">
-        <div class="container">
+        <div class="cont">
         <?php
         function dateRev ($pub_date) {$phpdate = strtotime ( $pub_date ); //преобразование даты из базы данных в формат даты php
                                       $month = date('m');
@@ -96,6 +113,32 @@ $queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
                 }
               //вывод подробной информации о новости с обращением к элементам массива
             ?>
+            <div class="void"></div>
+            <div class="void2"></div>
+            <div id='headlineGrid'>
+                    <div id='headlineForm'>Комментарии</div>
+                     </div> <br>
+                     <?php if ($_SESSION['user']) {?>
+                    <form class='w-100' action='comments-DB.php' method='post'>
+                      <input type='hidden' name='id_new' value=<?=$new_id?>>
+                      <div class='mb-3 d-flex w-50'>
+                        <label for='comment-text' class='form-label' id='lablab'>Напишите комментарий</label>
+                        <br><input type='text' class='form-control' id='comment-text' name='comment_text'>
+                       <div class='emptyNothing'></div>
+                        <button type='submit' class='btn mb-3 btn-primary mt-3'>Отправить</button>
+                      </div>
+                    </form>
+                    
+                  <?php  } ?>
+              <?php if (mysqli_num_rows($comments_result)) { 
+                foreach ($comments as $comment) {?> <div class='card'>
+                  <div class='card-body'> 
+                    <div class='card-header'><?=date_new($comment[1]);?></div><br>
+                    <h6 class='card-subtitle mb-2 text-body-secondary'><?=$comment[2]?></h6>
+                    <p class='card-text'><?=$comment[0]?></p></div>
+                </div>  <br> <?php }
+                ?> 
+                <?php } else echo "<p class='marginLEFT'><i>Комментариев пока нет!</i></p>"?>
         </div>
     </section>
 </main>

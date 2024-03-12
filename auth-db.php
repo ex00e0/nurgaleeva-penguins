@@ -10,19 +10,22 @@ $userPass = mysqli_fetch_array(mysqli_query($con,"SELECT * FROM users WHERE pass
 
 
 if(!isset($userEmail) && !isset($userPass)){     //если оба массива пустые
-	echo "Такой пользователь не найден.";
+	echo "<script>alert('Такой пользователь не найден.'); location.href='auth.php'; </script>";
 	exit();
+	// header('Location: auth.php');
 }
 else if(!isset($userEmail) || !isset($userPass)){    //если только один из массивов пустой
-	echo "Логин или пароль введены неверно";
+	echo "<script>alert('Логин или пароль введены неверно'); location.href='auth.php';</script>";
 	exit();
+	// header('Location: auth.php');
 }
 
+session_start();
+$_SESSION['user']=$userEmail['user_id'];
 
+// setcookie('user', $userEmail['user_id'], time() + 3600, "/");     //отправка куки и перенос на страницу аккаунта
 
-setcookie('user', $userEmail['user_id'], time() + 3600, "/");     //отправка куки и перенос на страницу аккаунта
-
-setcookie('name', $userEmail['username'], time() + 3600, "/");
+// setcookie('name', $userEmail['username'], time() + 3600, "/");
 
 header('Location: account.php');
 
