@@ -264,9 +264,13 @@ margin-top: 20px;}
  #accHeadline {color:#262D33;  margin-left:8%;
                                                  font-size:2vmax;
                                                  font-family:"Lato Heavy";} 
-.card {
+.card {margin-left: 8%;
        margin-right: 8%;}
 #lablab {margin-left:16%;
          width:40vmax;}
 .emptyNothing {width:5%;}
 .marginLEFT {margin-left: 8%;}
+#commImg {width:3vmax;
+          margin-left: 8%;
+          margin-right: 2%;}
+.disinblock {display:inline-block;}

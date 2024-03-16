@@ -16,14 +16,21 @@ $queryNewId = mysqli_fetch_all(mysqli_query($con, $queryNewId));
 //получение id выбранной новости, выборка данной новости и преобразование в массив
 
 
-$comments_result = mysqli_query($con, "SELECT comment_text, comment_date, username from comments inner join users on users.user_id=comments.user_id WHERE news_id=$new_id");   
+$comments_result = mysqli_query($con, 
+"SELECT comment_text, comment_date, username from comments inner join 
+users on users.user_id=comments.user_id WHERE news_id=$new_id");   
 $comments = mysqli_fetch_all($comments_result); }
+//получение комментариев из бд
 else {header("Location: /");}
 $monthC = ["01" => "Января", "02" => "Февраля", "03" => "Марта", "04" => "Апреля", "05" => "Мая",
 "06" => "Июня", "07" => "Июля", "08" => "Августа", "09" => "Сентября", "10" => "Октября", "11" => "Ноября", "12" => "Декабря"];
-function date_new($date_old) {global $monthC; 
+//массив месяцев
+function date_new($date_old) {global $monthC;  
+  //получение массива месяцев внутри функции
                               $date = date("d.m.Y H:i:s", strtotime($date_old));
+    //преобразование даты из mysql в php
                               return substr($date, 0, 2)." ".$monthC[substr($date, 3,2)]." ".substr($date, 6);}
+    //возврат даты в нужном формате
 
 session_start();
 ?>
@@ -50,7 +57,7 @@ session_start();
     <svg id="iconSearch" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M17.4354 16.3951L13.146 11.9395C14.2489 10.6301 14.8532 8.98262 14.8532 7.26749C14.8532 3.26026 11.5888 0 7.57659 0C3.56433 0 0.299988 3.26026 0.299988 7.26749C0.299988 11.2747 3.56433 14.535 7.57659 14.535C9.08284 14.535 10.5182 14.0812 11.7454 13.2199L16.0674 17.7093C16.2481 17.8967 16.4911 18 16.7514 18C16.9979 18 17.2317 17.9062 17.4092 17.7355C17.7863 17.3731 17.7983 16.7721 17.4354 16.3951ZM7.57659 1.89587C10.5423 1.89587 12.9549 4.30552 12.9549 7.26749C12.9549 10.2295 10.5423 12.6391 7.57659 12.6391C4.6109 12.6391 2.19823 10.2295 2.19823 7.26749C2.19823 4.30552 4.6109 1.89587 7.57659 1.89587Z" fill="#BCBFC2"/>
     </svg>
-    <div id="search">Поиск</div>
+    <div id="search" style='align-self:center;'>Поиск</div>
     <div id="subscribeBlock"></div>
     <a href="<?=($_SESSION['user'])?'/account.php':'';?>" id="iconSignIn">
     <svg viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -117,10 +124,16 @@ session_start();
             <div class="void2"></div>
             <div id='headlineGrid'>
                     <div id='headlineForm'>Комментарии</div>
-                     </div> <br>
-                     <?php if ($_SESSION['user']) {?>
+                     </div> <br> <img src='images/free-icon-comment-4074994.png' id='commImg'>
+                     <?php $numberComm = mysqli_num_rows($comments_result);
+                      echo "<p class='disinblock'><i> $numberComm </i></p>"; 
+                      //вывод количества комментариев
+                      ?><br><br> 
+                     <?php if ($_SESSION['user']) {
+                      //ограничение возможности добавления комментариев только для зарегистрированных пользователей ?>
                     <form class='w-100' action='comments-DB.php' method='post'>
                       <input type='hidden' name='id_new' value=<?=$new_id?>>
+                      <!--передача id новости в скрытом input-->
                       <div class='mb-3 d-flex w-50'>
                         <label for='comment-text' class='form-label' id='lablab'>Напишите комментарий</label>
                         <br><input type='text' class='form-control' id='comment-text' name='comment_text'>
@@ -128,9 +141,12 @@ session_start();
                         <button type='submit' class='btn mb-3 btn-primary mt-3'>Отправить</button>
                       </div>
                     </form>
-                    
                   <?php  } ?>
+
+
+
               <?php if (mysqli_num_rows($comments_result)) { 
+                //проверка на наличие комментариев в бд
                 foreach ($comments as $comment) {?> <div class='card'>
                   <div class='card-body'> 
                     <div class='card-header'><?=date_new($comment[1]);?></div><br>

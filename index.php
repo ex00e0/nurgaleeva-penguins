@@ -134,11 +134,14 @@ if ($sort) {$querySort .= " order by $sort";}
               //вывод названия и изображения новости
                }
         else {
-          $new_id = $new['news_id'];          
+          $new_id = $new['news_id'];           
           echo  "<br>";
                     echo "<div id='headlineGrid'>
                     <div id='headlineForm'><a href='oneNew.php?new=$new_id'>$new[title]</a></div> 
                      </div> <br>";
+                     $comments_result = mysqli_query($con, "SELECT * from comments inner join users on users.user_id=comments.user_id WHERE news_id=$new_id");   
+                     $comments = mysqli_num_rows($comments_result);
+                     echo "<p class='marginLEFT'><i>Комментариев: $comments</i></p> <br>";
                      //вывод заголовка-ссылки на более подробное описание новости
                     echo "<img src='images/news/$new[image]' style='margin-left:150px; width:500px'>";
                     //вывод изображения новости

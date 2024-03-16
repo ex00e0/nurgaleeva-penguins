@@ -6,8 +6,8 @@ $categories = mysqli_fetch_all(mysqli_query($con, $query_get_category));       /
 $news = mysqli_query($con, "select * from news");
 session_start();
 $user_id = $_SESSION['user'];
-// $user_id=$_COOKIE['user'];
 $userData = mysqli_fetch_array(mysqli_query($con, "SELECT * FROM users WHERE user_id=$user_id"));  
+//получение данных о пользователе из бд
 ?>
 <?php include ( "date.php"); ?>
 
@@ -72,13 +72,13 @@ $userData = mysqli_fetch_array(mysqli_query($con, "SELECT * FROM users WHERE use
 	<h1 id='accHeadline'>Изменение данных профиля</h1> 
   <div class="void"></div>
 	<!-- <a href="exit.php">Чтобы выйти, нажмите по ссылке.</a> --> 
-  <form method="post" action="" enctype="multipart/form-data" id='accForm'>
+  <form method="post" action="account-db.php" enctype="multipart/form-data" id='accForm'>
     <label for="newHeadline">Имя</label>
-    <input type="text" id="newHeadline" name="newHeadline" value="<?=$userData[1]?>">
-    <label for="newHeadline">Логин</label>
-    <input type="text" id="newHeadline" name="newHeadline" value='<?=$userData[2]?>'>
+    <input type="text" id="newHeadline" name="name" value="<?=$userData[1]?>">
     <label for="newHeadline">Пароль</label>
-    <input type="text" id="newHeadline" name="newHeadline" value='<?=$userData[3]?>'>
+    <input type="text" id="newHeadline" name="password" value='<?=$userData[2]?>'>
+    <label for="newHeadline">Логин</label>
+    <input type="text" id="newHeadline" name="login" value='<?=$userData[3]?>'>
     <input type="submit" value="Отправить" id="buttonForm2">
   </form>
 </body>
